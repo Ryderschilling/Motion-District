@@ -10,7 +10,7 @@ export default function Footer() {
         <h2 className="font-display mt-6 text-[clamp(52px,11vw,170px)]">
           Let&rsquo;s get
           <br />
-          <span className="outline-type">it done</span>
+          <span className="outline-type">in Motion</span>
           <span className="text-signal">.</span>
         </h2>
 

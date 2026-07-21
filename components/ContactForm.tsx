@@ -184,7 +184,11 @@ export default function ContactForm() {
               <p className="font-mono-label" style={{ color: "var(--muted)" }}>
                 Email
               </p>
-              <a href={`mailto:${CONTACT_EMAIL}`} data-h className="font-head mt-2 block text-2xl">
+              <a
+                href={`mailto:${CONTACT_EMAIL}`}
+                data-h
+                className="font-head mt-2 block break-words text-[clamp(17px,5vw,24px)]"
+              >
                 {CONTACT_EMAIL}
               </a>
             </div>

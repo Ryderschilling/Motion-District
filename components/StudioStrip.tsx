@@ -4,7 +4,7 @@ const FACTS = [
   ["Base", "Tampa, FL — travels anywhere"],
   ["Crew", "Shooters, directors, editors — one roof"],
   ["Format", "Films, recaps, cutdowns, docs"],
-  ["Motto", "Let's get it done"],
+  ["Motto", "Let's get in Motion"],
 ];
 
 export default function StudioStrip() {
