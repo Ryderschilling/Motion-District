@@ -38,11 +38,14 @@ function Mark({
   progress: MotionValue<number>;
 }) {
   const d = index - center;
-  const x = useTransform(progress, [0.1, 0.62], [d * 240, 0]);
-  const y = useTransform(progress, [0.1, 0.62], [Math.abs(d) * 130, 0]);
-  const rotate = useTransform(progress, [0.1, 0.62], [d * 9, 0]);
-  const scale = useTransform(progress, [0.1, 0.62], [0.72, 1]);
-  const opacity = useTransform(progress, [0.1, 0.5], [0.1, 1]);
+  // Start at progress 0 (the moment the section pins) and keep drifting
+  // into place until the midpoint — so it's already animating by the time
+  // you're halfway through the section, not sitting idle then snapping late.
+  const x = useTransform(progress, [0, 0.5], [d * 240, 0]);
+  const y = useTransform(progress, [0, 0.5], [Math.abs(d) * 130, 0]);
+  const rotate = useTransform(progress, [0, 0.5], [d * 9, 0]);
+  const scale = useTransform(progress, [0, 0.5], [0.72, 1]);
+  const opacity = useTransform(progress, [0, 0.3], [0.1, 1]);
 
   return (
     <motion.span
@@ -61,7 +64,6 @@ export default function SeenWith() {
     target: ref,
     offset: ["start start", "end end"],
   });
-  const noteOpacity = useTransform(scrollYProgress, [0.68, 0.85], [0, 1]);
   const center = (NAMES.length - 1) / 2;
 
   if (reduced) {
@@ -106,13 +108,10 @@ export default function SeenWith() {
           ))}
         </div>
 
-        <motion.p
-          style={{ opacity: noteOpacity }}
-          className="font-mono-label"
-        >
+        <p className="font-mono-label">
           <span style={{ color: "var(--muted)" }}>+ the next one could be </span>
           <span className="bg-signal px-1.5 py-0.5 text-ink">yours</span>
-        </motion.p>
+        </p>
       </div>
     </section>
   );

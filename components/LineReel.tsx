@@ -34,40 +34,37 @@ const CARDS = [
 /** progress point at which each card "wakes up" (≈ its depth in the path) */
 const STOPS = [0.16, 0.4, 0.63, 0.85];
 
-/* --- path helpers: journey points + loops → smooth bezier ---------- */
-function loopPts(cx: number, cy: number, r: number, dir = 1): [number, number][] {
-  const out: [number, number][] = [];
-  for (let a = 0; a <= 8; a++) {
-    const t = (a / 8) * Math.PI * 2 * dir + Math.PI / 2;
-    out.push([cx + Math.cos(t) * r, cy + Math.sin(t) * r]);
-  }
-  return out;
-}
-
+/* --- path: one long smooth serpentine weaving to all 4 cards -------
+ * No loops/spins. Near each card the route makes a gentle inward hook
+ * (a soft pair of close points) so the tip lingers = reads as slowing
+ * down at each video, without ever circling back. ------------------- */
 const JOURNEY: [number, number][] = [
   [880, -60],
-  [620, 130],
-  [330, 230],
-  [160, 420],
-  ...loopPts(250, 560, 68),
-  [430, 650],
-  [770, 700],
-  [1060, 830],
-  ...loopPts(1180, 930, 72, -1),
-  [1330, 1130],
-  [1230, 1390],
-  [900, 1520],
-  [520, 1620],
-  ...loopPts(330, 1705, 76),
-  [160, 1905],
-  [310, 2130],
-  [710, 2210],
-  [1050, 2330],
-  ...loopPts(1195, 2425, 68, -1),
-  [1330, 2630],
-  [1170, 2870],
-  [950, 2960],
-  ...loopPts(800, 2990, 50, -1),
+  [640, 120],
+  [360, 250],
+  // card 01 (left) — soft inward hook
+  [225, 425],
+  [300, 565],
+  [520, 660],
+  [810, 770],
+  [1055, 930],
+  // card 02 (right) — soft inward hook
+  [1235, 1090],
+  [1170, 1245],
+  [925, 1360],
+  [615, 1475],
+  [375, 1645],
+  // card 03 (left) — soft inward hook
+  [235, 1830],
+  [305, 1980],
+  [545, 2095],
+  [825, 2225],
+  [1060, 2385],
+  // card 04 (right) — soft inward hook
+  [1240, 2555],
+  [1175, 2710],
+  [945, 2850],
+  [820, 2965],
   [724, 3056],
 ];
 
