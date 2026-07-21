@@ -1,0 +1,17 @@
+# deps
+/node_modules
+
+# next
+/.next/
+/out/
+
+# misc
+.DS_Store
+_to_delete_src.zip
+*.pem
+npm-debug.log*
+.env*
+
+# ts
+*.tsbuildinfo
+next-env.d.ts

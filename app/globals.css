@@ -1,0 +1,492 @@
+@import "tailwindcss";
+
+/* ============================================================
+   MOTION DISTRICT — DESIGN TOKENS
+   Locked palette: Paper / Ink / Signal (+ grade tints for imagery)
+   ============================================================ */
+@theme inline {
+  --color-paper: #f3f2ee;
+  --color-paper2: #ffffff;
+  --color-ink: #0a0a0a;
+  --color-ink2: #141414;
+  --color-signal: #e5ff00;
+  --color-grade-teal: #1fa398;
+  --color-grade-amber: #ff7a18;
+
+  --font-display: var(--font-archivo), system-ui, sans-serif;
+  --font-body: var(--font-space), system-ui, sans-serif;
+  --font-label: var(--font-jbmono), monospace;
+
+  --ease-cine: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root {
+  --fg: #0a0a0a;
+  --bg: #f3f2ee;
+  --line: rgba(10, 10, 10, 0.12);
+  --muted: rgba(10, 10, 10, 0.52);
+  --card: #ffffff;
+  /* cursor-follow position (set by CursorField, lerped) */
+  --mx: -999px;
+  --my: -999px;
+}
+
+/* Dark ("cinema") sections flip local ink/paper roles */
+.on-dark {
+  --fg: #f3f2ee;
+  --bg: #0a0a0a;
+  --line: rgba(243, 242, 238, 0.14);
+  --muted: rgba(243, 242, 238, 0.55);
+  --card: #131313;
+  background: var(--bg);
+  color: var(--fg);
+  isolation: isolate; /* lets the cursor glow sit above the bg, below content */
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: transparent; /* real canvas lives in CursorField behind everything */
+  color: var(--fg);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: #e5ff00;
+  color: #0a0a0a;
+}
+
+/* Native cursor hidden on fine pointers — custom ring takes over */
+@media (hover: hover) and (pointer: fine) {
+  body,
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label {
+    cursor: none;
+  }
+}
+
+/* ============================================================
+   CINEMA GLOW — dark sections get a soft *light* pool that
+   follows the cursor. background-attachment:fixed makes the
+   radial position viewport-relative so it can share --mx/--my.
+   ============================================================ */
+@media (hover: hover) and (pointer: fine) {
+  /* element-scoped so it can't override `fixed` on overlay divs (e.g. mobile menu) */
+  section.on-dark,
+  header.on-dark,
+  footer.on-dark {
+    position: relative;
+  }
+  .on-dark::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1; /* above the section bg (isolated), below all content */
+    background: radial-gradient(
+      520px circle at var(--mx) var(--my),
+      rgba(243, 242, 238, 0.07),
+      transparent 70%
+    );
+    background-attachment: fixed;
+  }
+}
+
+/* ============================================================
+   TYPE VOICES
+   ============================================================ */
+.font-display {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+
+.font-head {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+
+.font-mono-label {
+  font-family: var(--font-label);
+  font-size: 10.5px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.eyebrow {
+  font-family: var(--font-label);
+  font-size: 10.5px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.eyebrow::before {
+  content: "";
+  width: 26px;
+  height: 1px;
+  background: #e5ff00;
+  flex: none;
+}
+
+.outline-type {
+  -webkit-text-stroke: 1.5px var(--fg);
+  color: transparent;
+}
+
+/* ============================================================
+   GRAIN
+   ============================================================ */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 70;
+  opacity: 0.05;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ============================================================
+   BUTTONS — magnetic shells live in Magnetic.tsx
+   ============================================================ */
+.btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  border: 1px solid var(--fg);
+  background: transparent;
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  padding: 16px 30px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  text-decoration: none;
+  z-index: 1;
+}
+.btn > span {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  transition: color 0.4s var(--ease-cine);
+}
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--fg);
+  transform: translateY(101%);
+  transition: transform 0.45s var(--ease-cine);
+  z-index: 1;
+}
+.btn:hover::after {
+  transform: none;
+}
+.btn:hover > span {
+  color: var(--bg);
+}
+.btn.solid {
+  background: var(--fg);
+  color: var(--bg);
+}
+.btn.solid::after {
+  background: #e5ff00;
+}
+.btn.solid:hover > span {
+  color: #0a0a0a;
+}
+.btn.sig {
+  background: #e5ff00;
+  border-color: #e5ff00;
+  color: #0a0a0a;
+}
+.btn.sig::after {
+  background: var(--fg);
+}
+.btn.sig:hover > span {
+  color: var(--bg);
+}
+.btn .arw {
+  transition: transform 0.4s var(--ease-cine);
+}
+.btn:hover .arw {
+  transform: translateX(4px);
+}
+/* text-presentation north-east arrow (the ↗ char renders as emoji on some platforms) */
+.arw-ne {
+  display: inline-block;
+  transform: rotate(-45deg);
+}
+.btn:hover .arw-ne {
+  transform: rotate(-45deg) translateX(4px);
+}
+
+/* ============================================================
+   TICKER
+   ============================================================ */
+.ticker {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 16px 0;
+}
+.ticker .run {
+  display: inline-block;
+  animation: tickerscroll 28s linear infinite;
+}
+.ticker span {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  padding: 0 26px;
+}
+.ticker span i {
+  color: #e5ff00;
+  font-style: normal;
+  padding-right: 26px;
+}
+@keyframes tickerscroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ============================================================
+   WORK TILES — letterbox bars + grayscale-to-color
+   ============================================================ */
+.tile {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  border-radius: 2px;
+  display: block;
+  width: 100%;
+}
+.tile video,
+.tile img.poster {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08);
+  transform: scale(1.04);
+  transition:
+    filter 0.7s var(--ease-cine),
+    transform 1.1s var(--ease-cine),
+    opacity 0.5s var(--ease-cine);
+}
+.tile:hover video,
+.tile:hover img.poster,
+.tile.playing video {
+  filter: grayscale(0) contrast(1.03);
+  transform: scale(1);
+}
+.tile::before,
+.tile::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 0;
+  background: #000;
+  z-index: 3;
+  transition: height 0.55s var(--ease-cine);
+}
+.tile::before {
+  top: 0;
+}
+.tile::after {
+  bottom: 0;
+}
+.tile:hover::before,
+.tile:hover::after {
+  height: 8%;
+}
+.tile .lbl {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 4;
+  color: #fff;
+  text-align: left;
+}
+.tile .lbl .k {
+  font-family: var(--font-label);
+  font-size: 9px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: 0.5s var(--ease-cine);
+  color: #e5ff00;
+}
+.tile:hover .lbl .k {
+  opacity: 1;
+  transform: none;
+}
+.tile .lbl .t {
+  font-family: var(--font-display);
+  font-stretch: 125%;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 17px;
+  line-height: 1;
+  margin-top: 6px;
+}
+.tile .chip {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 4;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10px;
+  transition: 0.4s var(--ease-cine);
+}
+.tile:hover .chip {
+  background: #e5ff00;
+  border-color: #e5ff00;
+  color: #000;
+}
+.tile .dur {
+  position: absolute;
+  top: 22px;
+  left: 16px;
+  z-index: 4;
+  font-family: var(--font-label);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ============================================================
+   FORMS
+   ============================================================ */
+.field {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 14px 0;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--fg);
+  outline: none;
+  border-radius: 0;
+  transition: border-color 0.4s var(--ease-cine);
+}
+.field:focus {
+  border-color: var(--fg);
+}
+.field::placeholder {
+  color: var(--muted);
+}
+.chip-toggle {
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  padding: 10px 18px;
+  font-family: var(--font-label);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: transparent;
+  transition: 0.3s var(--ease-cine);
+}
+.chip-toggle:hover {
+  border-color: var(--fg);
+  color: var(--fg);
+}
+.chip-toggle.active {
+  background: var(--fg);
+  border-color: var(--fg);
+  color: var(--bg);
+}
+
+/* ============================================================
+   MISC
+   ============================================================ */
+.hline {
+  height: 1px;
+  background: var(--line);
+}
+
+.wrap {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding-left: clamp(22px, 4vw, 56px);
+  padding-right: clamp(22px, 4vw, 56px);
+}
+
+/* keyboard users still get focus rings even with the custom cursor */
+:focus-visible {
+  outline: 2px solid #e5ff00;
+  outline-offset: 3px;
+}
+
+@keyframes drop {
+  0% {
+    transform: translateY(-100%);
+  }
+  60%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION — kill the theatrics, keep the content
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .ticker .run {
+    animation: none;
+  }
+  .on-dark::before {
+    display: none;
+  }
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
