@@ -202,12 +202,6 @@ export default function ContactForm() {
               </p>
             </div>
           </div>
-
-          <p className="font-mono-label leading-relaxed" style={{ color: "var(--muted)" }}>
-            Response time: fast.
-            <br />
-            Slow answers don&rsquo;t make films.
-          </p>
         </div>
       </Reveal>
     </div>
