@@ -6,6 +6,7 @@ import CursorField from "@/components/CursorField";
 import Cursor from "@/components/Cursor";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import SiteAudio from "@/components/SiteAudio";
 
 // Self-hosted at build time via next/font — no runtime Google request.
 const archivo = Archivo({
@@ -72,6 +73,7 @@ export default function RootLayout({
           <main>{children}</main>
           <Footer />
         </SmoothScroll>
+        <SiteAudio />
       </body>
     </html>
   );
