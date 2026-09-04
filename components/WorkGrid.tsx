@@ -22,41 +22,64 @@ const SLOTS = [
   "lg:col-start-7 lg:col-span-6 lg:row-start-3", // bottom-right (wide)
 ];
 
-/* --- signature mosaic: the vertical film anchors the middle ---------- */
+/* --- signature mosaic: the vertical film anchors the middle ----------
+   The six SLOTS below carry the editorial arrangement. Any film past
+   those flows into a uniform grid underneath, so the archive keeps
+   scrolling however many films get added. */
 function Mosaic({ onOpen }: { onOpen: (f: Film) => void }) {
   const hero = FILMS.find((f) => f.vertical) ?? FILMS[0];
   const rest = FILMS.filter((f) => f !== hero);
+  const featured = rest.slice(0, SLOTS.length);
+  const overflow = rest.slice(SLOTS.length);
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-12">
-      {/* hero — spans the two flank rows, centered */}
-      <motion.div
-        layout
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7, ease: EASE }}
-        className="sm:col-span-2 lg:col-start-5 lg:col-span-4 lg:row-start-1 lg:row-span-2"
-      >
-        <WorkTile
-          film={hero}
-          onOpen={onOpen}
-          aspect="aspect-[3/4] sm:aspect-video lg:aspect-auto lg:h-full"
-        />
-      </motion.div>
-
-      {rest.map((f, i) => (
+    <>
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-12">
+        {/* hero — spans the two flank rows, centered */}
         <motion.div
-          key={f.slug}
           layout
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.04 * i, ease: EASE }}
-          className={SLOTS[i] ?? ""}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="sm:col-span-2 lg:col-start-5 lg:col-span-4 lg:row-start-1 lg:row-span-2"
         >
-          <WorkTile film={f} onOpen={onOpen} aspect="aspect-video" />
+          <WorkTile
+            film={hero}
+            onOpen={onOpen}
+            aspect="aspect-[3/4] sm:aspect-video lg:aspect-auto lg:h-full"
+          />
         </motion.div>
-      ))}
-    </div>
+
+        {featured.map((f, i) => (
+          <motion.div
+            key={f.slug}
+            layout
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.04 * i, ease: EASE }}
+            className={SLOTS[i]}
+          >
+            <WorkTile film={f} onOpen={onOpen} aspect="aspect-video" />
+          </motion.div>
+        ))}
+      </div>
+
+      {overflow.length > 0 && (
+        <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {overflow.map((f) => (
+            <motion.div
+              key={f.slug}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-12%" }}
+              transition={{ duration: 0.6, ease: EASE }}
+            >
+              <WorkTile film={f} onOpen={onOpen} aspect="aspect-video" />
+            </motion.div>
+          ))}
+        </div>
+      )}
+    </>
   );
 }
 

@@ -52,7 +52,16 @@ export default function Footer() {
             ))}
           </div>
           <div className="font-mono-label md:text-right" style={{ color: "var(--muted)" }}>
-            © {new Date().getFullYear()} Motion District — site by builtbyRyder
+            © {new Date().getFullYear()} Motion District — website built by{" "}
+            <a
+              href="https://ryderschilling.com"
+              target="_blank"
+              rel="noopener"
+              data-h
+              className="underline underline-offset-4 opacity-80 transition-opacity hover:opacity-100"
+            >
+              Ryder Schilling
+            </a>
           </div>
         </div>
       </div>

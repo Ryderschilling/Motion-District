@@ -8,6 +8,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
  * Full-screen theater. Sound on, letterboxed, mono credits.
+ * No title anywhere — category tag and the film, nothing else.
  */
 export default function Lightbox({
   film,
@@ -30,7 +31,7 @@ export default function Lightbox({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.45, ease: EASE }}
-          className="fixed inset-0 z-[90] flex flex-col items-center justify-center bg-ink/95 px-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[90] flex flex-col items-center justify-center bg-ink/95 px-4 py-6 backdrop-blur-sm"
           onClick={onClose}
         >
           <motion.div
@@ -38,14 +39,15 @@ export default function Lightbox({
             animate={{ scale: 1, y: 0 }}
             exit={{ scale: 0.97, y: 12 }}
             transition={{ duration: 0.6, ease: EASE }}
-            className={`w-full ${film.vertical ? "max-w-[420px]" : "max-w-5xl"}`}
+            className={`w-full ${
+              film.vertical
+                ? "max-w-[min(420px,40vh)]"
+                : "max-w-[min(64rem,128vh)]"
+            }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="mb-3 flex items-end justify-between text-paper">
-              <div>
-                <div className="font-mono-label text-signal">{film.cat}</div>
-                <div className="font-head mt-1 text-2xl">{film.title}</div>
-              </div>
+            <div className="mb-3 flex items-center justify-between text-paper">
+              <div className="font-mono-label text-signal">{film.cat}</div>
               <button
                 data-h
                 onClick={onClose}

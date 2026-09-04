@@ -4,8 +4,9 @@ import { useRef } from "react";
 import type { Film } from "@/lib/videos";
 
 /**
- * Hover-to-play film tile. Grayscale melts to color, letterbox bars breathe in,
- * label reveals. Click hands the film to the lightbox (sound on).
+ * Hover-to-play film tile. Grayscale melts to color, letterbox bars breathe in.
+ * No title overlay — the frame carries it. Click hands the film to the
+ * lightbox (sound on), where the title and category live.
  */
 export default function WorkTile({
   film,
@@ -57,10 +58,6 @@ export default function WorkTile({
         <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden>
           <path d="M0 0l10 6-10 6z" />
         </svg>
-      </span>
-      <span className="lbl">
-        <span className="k block">{film.cat}</span>
-        <span className="t block">{film.title}</span>
       </span>
     </button>
   );

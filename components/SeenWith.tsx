@@ -1,10 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   motion,
   useScroll,
   useTransform,
+  useMotionValue,
   useReducedMotion,
   type MotionValue,
 } from "framer-motion";
@@ -13,7 +14,7 @@ import {
  * "As seen with" — wordmarks fly in from off-axis and settle as you scroll.
  * Pulled from @motion.districtco's own posts; swap/extend freely.
  */
-const NAMES = ["Daniel Allan", "NELK Boys", "Matt Johnson", "Public Hotel"];
+const NAMES = ["Nelk", "TJR", "Insta 360", "Hills", "Matt Johnson", "Tiffen"];
 
 function Bracket({ className }: { className?: string }) {
   return (
@@ -45,12 +46,24 @@ function Mark({
   const y = useTransform(progress, [0, 0.5], [Math.abs(d) * 130, 0]);
   const rotate = useTransform(progress, [0, 0.5], [d * 9, 0]);
   const scale = useTransform(progress, [0, 0.5], [0.72, 1]);
-  const opacity = useTransform(progress, [0, 0.3], [0.1, 1]);
+
+  // Opacity RATCHETS. It tracks the same scroll-linked ramp as before, so the
+  // fade-in feels identical, but the value is only ever allowed to climb —
+  // scrolling back down (or up) can never drag it back toward transparent.
+  const ramp = useTransform(progress, [0, 0.3], [0.1, 1]);
+  const opacity = useMotionValue(ramp.get());
+  useEffect(() => {
+    const climbOnly = (v: number) => {
+      if (v > opacity.get()) opacity.set(v);
+    };
+    climbOnly(ramp.get());
+    return ramp.on("change", climbOnly);
+  }, [ramp, opacity]);
 
   return (
     <motion.span
       style={{ x, y, rotate, scale, opacity }}
-      className="font-head whitespace-nowrap text-[clamp(26px,4.6vw,62px)] will-change-transform"
+      className="font-head whitespace-nowrap text-[clamp(24px,4vw,54px)] will-change-transform"
     >
       {name}
     </motion.span>
@@ -75,7 +88,7 @@ export default function SeenWith() {
           </p>
           <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4">
             {NAMES.map((n) => (
-              <span key={n} className="font-head text-[clamp(26px,4.6vw,62px)]">
+              <span key={n} className="font-head text-[clamp(24px,4vw,54px)]">
                 {n}
               </span>
             ))}
@@ -96,7 +109,7 @@ export default function SeenWith() {
           <Bracket className="h-11 scale-x-[-1]" />
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-x-14 gap-y-6 px-6">
+        <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-5 px-6">
           {NAMES.map((n, i) => (
             <Mark
               key={n}

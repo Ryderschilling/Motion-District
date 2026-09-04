@@ -8,9 +8,9 @@ import { IG_URL } from "@/lib/videos";
 
 /**
  * v1 submit: opens a prefilled email. TODO(ryder): wire Resend/Formspree
- * and swap CONTACT_EMAIL for Motion District's real inbox.
+ * (inbox is addison@motiondistrict.co).
  */
-const CONTACT_EMAIL = "hello@motiondistrict.co";
+const CONTACT_EMAIL = "addison@motiondistrict.co";
 
 const TYPES = ["Brand film", "Event", "Automotive", "Fitness", "Social package", "Other"];
 const BUDGETS = ["< $1k", "$1k – $3k", "$3k – $10k", "$10k+", "Let's talk"];
