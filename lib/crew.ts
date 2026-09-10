@@ -2,8 +2,8 @@
  * The crew. Bios are Smith's own copy (supplied 2026-09-10), punctuation only.
  * Photos live in /public/crew at 640w and 1240w.
  *
- * `strip` is the object-position for the 2.35:1 mobile crop on the homepage,
- * `frame` is the object-position for the 4:5 portrait frame on /about.
+ * `frame` is the object-position used wherever the photo is cropped
+ * (the /about portrait frame and the homepage photo panels).
  */
 export type CrewMember = {
   slug: string;
@@ -14,7 +14,6 @@ export type CrewMember = {
   bio: string[];
   photo: string;
   alt: string;
-  strip: string;
   frame: string;
 };
 
@@ -31,7 +30,6 @@ export const CREW: CrewMember[] = [
     ],
     photo: "/crew/smith-rice",
     alt: "Smith Rice, in sunglasses and a black tee, smiling on a cobblestone street",
-    strip: "50% 22%",
     frame: "50% 30%",
   },
   {
@@ -46,7 +44,6 @@ export const CREW: CrewMember[] = [
     ],
     photo: "/crew/addison-moore",
     alt: "Addison Moore mid-conversation at a meeting table, wearing an Elias Collective quarter-zip",
-    strip: "45% 36%",
     frame: "40% 50%",
   },
   {
@@ -61,7 +58,6 @@ export const CREW: CrewMember[] = [
     ],
     photo: "/crew/gavin-frantz",
     alt: "Gavin Frantz in a Yankees cap, seated at an outdoor table at night under string lights",
-    strip: "55% 40%",
     frame: "55% 45%",
   },
 ];

@@ -11,14 +11,16 @@ import { CREW, srcSet } from "@/lib/crew";
  * Fine pointer: hover a name and his photo trails the cursor in a letterboxed
  * frame (lerped, tilts with horizontal speed). Swapping rows wipes the frame
  * to the next person instead of cutting.
- * Touch / narrow: each row carries its own 2.35:1 anamorphic crop that opens
- * like a shutter when the row scrolls into view.
+ * Touch / narrow: each row is a tall panel with his photo behind the words,
+ * opened by letterbox shutters when the row scrolls into view.
  */
 export default function CrewCredits() {
   const secRef = useRef<HTMLElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const floatRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<number | null>(null);
+  // float images stay lazy until a mouse first enters the list, then load eagerly
+  const [armed, setArmed] = useState(false);
 
   // trailing frame: lerp toward the pointer, tilt with velocity
   const target = useRef({ x: 0, y: 0 });
@@ -58,7 +60,7 @@ export default function CrewCredits() {
 
   useEffect(() => () => cancelAnimationFrame(raf.current), []);
 
-  // touch strips: shutter opens once per row as it enters
+  // panels: shutters open once per row as it enters
   useEffect(() => {
     const list = listRef.current;
     if (!list) return;
@@ -80,12 +82,12 @@ export default function CrewCredits() {
 
   return (
     <section ref={secRef} className="crew on-dark overflow-hidden" aria-labelledby="crew-heading">
-      <div className="wrap py-28">
+      <div className="wrap crew-inner py-24">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <p className="eyebrow">The crew</p>
-              <h2 id="crew-heading" className="font-display mt-6 text-[clamp(34px,5.4vw,76px)]">
+              <h2 id="crew-heading" className="font-display mt-6 text-[clamp(34px,min(5.4vw,9vh),76px)]">
                 Behind
                 <br />
                 <span className="outline-type">the camera</span>
@@ -106,6 +108,7 @@ export default function CrewCredits() {
         <ul
           ref={listRef}
           className="crew-list mt-16"
+          onPointerEnter={(e) => e.pointerType === "mouse" && setArmed(true)}
           onPointerMove={(e) => e.pointerType === "mouse" && aim(e.clientX, e.clientY)}
           onPointerLeave={() => {
             setActive(null);
@@ -143,19 +146,15 @@ export default function CrewCredits() {
                 </span>
 
                 <span className="crew-meta">
-                  <span className="font-mono-label block text-[10px]" style={{ color: "var(--fg)" }}>
-                    {p.role}
-                  </span>
-                  <span className="mt-2 block text-[14px] leading-relaxed" style={{ color: "var(--muted-strong)" }}>
-                    {p.teaser}
-                  </span>
+                  <span className="crew-role font-mono-label block text-[10px]">{p.role}</span>
+                  <span className="crew-teaser mt-2 block text-[14px] leading-relaxed">{p.teaser}</span>
                 </span>
 
                 <span className="crew-chip" aria-hidden>
                   →
                 </span>
 
-                <span className="crew-strip" aria-hidden>
+                <span className="crew-bg" aria-hidden>
                   <img
                     src={`${p.photo}-640.webp`}
                     srcSet={srcSet(p.photo)}
@@ -163,8 +162,10 @@ export default function CrewCredits() {
                     alt=""
                     loading="lazy"
                     decoding="async"
-                    style={{ objectPosition: p.strip }}
+                    style={{ objectPosition: p.frame }}
                   />
+                  <span className="crew-shut t" />
+                  <span className="crew-shut b" />
                 </span>
               </Link>
             </li>
@@ -179,7 +180,7 @@ export default function CrewCredits() {
             key={p.slug}
             src={`${p.photo}-640.webp`}
             alt=""
-            loading="lazy"
+            loading={armed ? "eager" : "lazy"}
             decoding="async"
             className={active === i ? "is-cur" : active !== null && i < active ? "is-past" : ""}
             style={{ objectPosition: p.frame }}

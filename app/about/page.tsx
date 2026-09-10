@@ -13,11 +13,12 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="pt-40">
-      <div className="wrap pb-24 pin:pb-32">
+    <div>
+      {/* hero: one full screen on desktop, content sits on the bottom edge */}
+      <section className="wrap flex flex-col justify-end pb-24 pt-40 pin:min-h-svh pin:pb-[9vh] pin:pt-32">
         <Reveal>
           <p className="eyebrow">About</p>
-          <h1 className="font-display mt-6 max-w-6xl text-[clamp(44px,8.4vw,128px)]">
+          <h1 className="font-display mt-6 text-[clamp(40px,12vw,96px)] pin:text-[min(11vw,21vh,176px)]">
             Meet the
             <br />
             <span className="outline-type">crew</span>
@@ -25,7 +26,7 @@ export default function AboutPage() {
           </h1>
         </Reveal>
         <Reveal delay={0.1}>
-          <div className="mt-10 flex flex-wrap items-end justify-between gap-10">
+          <div className="mt-10 flex flex-wrap items-end justify-between gap-10 pin:mt-[5vh]">
             <p className="max-w-[520px] text-[clamp(15px,1.3vw,17px)] leading-relaxed" style={{ color: "var(--muted-strong)" }}>
               One directs. One builds the machine behind the work. One holds the
               camera when it counts. These are the three people behind Motion
@@ -45,7 +46,7 @@ export default function AboutPage() {
             </ol>
           </div>
         </Reveal>
-      </div>
+      </section>
 
       <div className="scenes">
         {CREW.map((p, i) => (
@@ -61,11 +62,11 @@ export default function AboutPage() {
       </div>
 
       {/* that's a wrap */}
-      <section>
-        <div className="wrap flex flex-wrap items-end justify-between gap-10 py-28">
+      <section className="pin:flex pin:min-h-svh pin:items-center">
+        <div className="wrap flex w-full flex-col items-start gap-10 py-28 pin:gap-[6vh] pin:py-[10vh]">
           <Reveal>
             <p className="eyebrow">That&rsquo;s a wrap</p>
-            <h2 className="font-display mt-6 max-w-4xl text-[clamp(34px,5.4vw,76px)]">
+            <h2 className="font-display mt-6 text-[clamp(34px,8.5vw,76px)] pin:text-[min(6vw,13vh,80px)]">
               Now picture your
               <br />
               <span className="outline-type">brand in the frame</span>

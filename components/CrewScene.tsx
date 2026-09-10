@@ -41,7 +41,7 @@ function MaskName({ id, first, last }: { id: string; first: string; last: string
   ];
 
   return (
-    <h2 ref={ref} id={id} className="font-display text-[clamp(52px,12vw,104px)] md:text-[clamp(48px,6.4vw,104px)]">
+    <h2 ref={ref} id={id} className="font-display text-[clamp(48px,12vw,104px)] md:text-[clamp(40px,min(6vw,11vh),96px)]">
       {lines.map((l, i) => (
         <span key={l.t} className="block overflow-hidden pb-[0.04em]">
           <motion.span
