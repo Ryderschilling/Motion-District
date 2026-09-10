@@ -54,7 +54,6 @@ export default function AboutPage() {
             key={p.slug}
             person={p}
             index={i}
-            total={CREW.length}
             dark={i % 2 === 0}
             last={i === CREW.length - 1}
           />

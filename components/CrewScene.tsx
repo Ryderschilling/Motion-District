@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useInView,
-  useMotionValueEvent,
   useScroll,
   useTransform,
 } from "framer-motion";
@@ -13,10 +12,6 @@ import { useMedia, useReducedSafe } from "@/lib/useReducedSafe";
 import { srcSet, type CrewMember } from "@/lib/crew";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
-const FPS = 24;
-
-const pad = (n: number) => String(n).padStart(2, "0");
-
 /** Name lines rise out of a mask. useInView + animate, never whileInView (it stalls on masked spans). */
 function MaskName({ id, first, last }: { id: string; first: string; last: string }) {
   const ref = useRef<HTMLHeadingElement>(null);
@@ -61,25 +56,22 @@ function MaskName({ id, first, last }: { id: string; first: string; last: string
 export default function CrewScene({
   person,
   index,
-  total,
   dark,
   last,
 }: {
   person: CrewMember;
   index: number;
-  total: number;
   dark: boolean;
   last: boolean;
 }) {
   const ref = useRef<HTMLElement>(null);
-  const tcRef = useRef<HTMLSpanElement>(null);
   const reduced = useReducedSafe();
   const pinned = useMedia("(min-width: 768px) and (min-height: 640px)");
   const flip = index % 2 === 1; // photo on the right for the middle scene
 
   // entrance: section top travels from viewport bottom to viewport top
   const { scrollYProgress: enter } = useScroll({ target: ref, offset: ["start end", "start start"] });
-  // whole life of the section, drives the burnt-in timecode and the exit
+  // whole life of the section, drives the exit
   const { scrollYProgress: life } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
   // every range spans exactly [0,1] (motion v12 compiles these to native scroll timelines)
@@ -96,14 +88,6 @@ export default function CrewScene({
 
   const staticMotion = reduced;
   const useExit = pinned && !last && !reduced;
-
-  const base = index + 1;
-  useMotionValueEvent(life, "change", (v) => {
-    if (!tcRef.current || reduced) return;
-    const frames = Math.floor(Math.max(0, Math.min(1, v)) * FPS * 12);
-    const s = Math.floor(frames / FPS);
-    tcRef.current.textContent = `${pad(base)}:00:${pad(s)}:${pad(frames % FPS)}`;
-  });
 
   return (
     <section
@@ -144,12 +128,6 @@ export default function CrewScene({
                   style={{ opacity: shade }}
                 />
               )}
-              <span className="scene-tc left-3 top-3" aria-hidden>
-                Scene {pad(base)} / {pad(total)}
-              </span>
-              <span className="scene-tc bottom-3 right-3" aria-hidden>
-                TC <span ref={tcRef}>{pad(base)}:00:00:00</span>
-              </span>
             </motion.div>
           </div>
 

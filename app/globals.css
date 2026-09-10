@@ -744,18 +744,6 @@ body {
   height: 100%;
   object-fit: cover;
 }
-.scene-tc {
-  position: absolute;
-  z-index: 3;
-  font-family: var(--font-label);
-  font-size: 9.5px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #f3f2ee;
-  background: rgba(10, 10, 10, 0.72);
-  padding: 5px 8px;
-  font-variant-numeric: tabular-nums;
-}
 .scene-body p {
   font-size: 15px;
   line-height: 1.7;
