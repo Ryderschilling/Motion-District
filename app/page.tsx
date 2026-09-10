@@ -4,6 +4,7 @@ import LineReel from "@/components/LineReel";
 import SeenWith from "@/components/SeenWith";
 import ServicesBlocks from "@/components/ServicesBlocks";
 import StudioStrip from "@/components/StudioStrip";
+import CrewCredits from "@/components/CrewCredits";
 import Reveal from "@/components/Reveal";
 
 export default function Home() {
@@ -37,6 +38,7 @@ export default function Home() {
 
       <LineReel />
       <SeenWith />
+      <CrewCredits />
       <ServicesBlocks />
       <StudioStrip />
     </>

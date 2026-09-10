@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* pinned crew scenes only where a scene fits one screen */
+@custom-variant pin (@media (min-width: 768px) and (min-height: 640px));
+
 /* ============================================================
    MOTION DISTRICT — DESIGN TOKENS
    Locked palette: Paper / Ink / Signal (+ grade tints for imagery)
@@ -25,6 +28,7 @@
   --bg: #f3f2ee;
   --line: rgba(10, 10, 10, 0.12);
   --muted: rgba(10, 10, 10, 0.52);
+  --muted-strong: rgba(10, 10, 10, 0.7); /* body copy: 4.5:1+ on paper */
   --card: #ffffff;
   /* cursor-follow position (set by CursorField, lerped) */
   --mx: -999px;
@@ -37,6 +41,7 @@
   --bg: #0a0a0a;
   --line: rgba(243, 242, 238, 0.14);
   --muted: rgba(243, 242, 238, 0.55);
+  --muted-strong: rgba(243, 242, 238, 0.7);
   --card: #131313;
   background: var(--bg);
   color: var(--fg);
@@ -436,6 +441,275 @@ body {
   60%,
   100% {
     transform: translateY(100%);
+  }
+}
+
+/* ============================================================
+   CREW CREDITS (homepage): names roll like end credits
+   ============================================================ */
+.crew {
+  position: relative;
+}
+.crew-list {
+  border-bottom: 1px solid var(--line);
+}
+.crew-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  grid-template-areas:
+    "idx name chip"
+    ".   meta meta"
+    "strip strip strip";
+  column-gap: 14px;
+  align-items: start;
+  padding: 26px 0 30px;
+  border-top: 1px solid var(--line);
+  color: var(--fg);
+  text-decoration: none;
+}
+.crew-idx {
+  grid-area: idx;
+  padding-top: 0.55em;
+  color: var(--muted-strong);
+}
+.crew-name {
+  grid-area: name;
+  display: block;
+  font-size: clamp(34px, 9.4vw, 60px);
+  line-height: 0.92;
+}
+.crew-name-in {
+  display: inline-block;
+  transition:
+    transform 0.7s var(--ease-cine),
+    opacity 0.5s var(--ease-cine);
+}
+.crew-meta {
+  grid-area: meta;
+  display: block;
+  margin-top: 14px;
+  max-width: 360px;
+}
+.crew-chip {
+  grid-area: chip;
+  justify-self: end;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition:
+    background 0.4s var(--ease-cine),
+    border-color 0.4s var(--ease-cine),
+    color 0.4s var(--ease-cine),
+    transform 0.5s var(--ease-cine);
+}
+.crew-row:hover .crew-chip,
+.crew-row.is-active .crew-chip {
+  background: #e5ff00;
+  border-color: #e5ff00;
+  color: #0a0a0a;
+  transform: rotate(-45deg);
+}
+
+/* touch / narrow: an anamorphic crop per row */
+.crew-strip {
+  grid-area: strip;
+  position: relative;
+  display: block;
+  margin-top: 22px;
+  aspect-ratio: 2.35 / 1;
+  overflow: hidden;
+  background: #111;
+}
+.crew-strip img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+}
+.js-crew .crew-strip {
+  clip-path: inset(50% 0 50% 0);
+  transition: clip-path 1.1s var(--ease-cine);
+}
+.js-crew .crew-strip img {
+  transform: scale(1.18);
+  transition: transform 1.6s var(--ease-cine);
+}
+.js-crew .crew-row.in .crew-strip {
+  clip-path: inset(0 0 0 0);
+}
+.js-crew .crew-row.in .crew-strip img {
+  transform: scale(1);
+}
+
+.crew-float {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .crew-row {
+    grid-template-columns: 56px minmax(0, 1fr) minmax(240px, 330px) 44px;
+    grid-template-areas: "idx name meta chip";
+    column-gap: clamp(18px, 2.4vw, 36px);
+    align-items: center;
+    padding: clamp(26px, 3vw, 40px) 0;
+  }
+  .crew-idx {
+    padding-top: 0;
+  }
+  .crew-name {
+    font-size: clamp(30px, 4.4vw, 68px);
+    white-space: nowrap;
+  }
+  .crew-meta {
+    margin-top: 0;
+  }
+}
+
+/* fine pointer: no strips, the frame follows the cursor instead */
+@media (hover: hover) and (pointer: fine) and (min-width: 1024px) {
+  .crew-strip {
+    display: none;
+  }
+  .crew-list:hover .crew-row:not(:hover) .crew-name-in,
+  .crew-list:focus-within .crew-row:not(.is-active) .crew-name-in {
+    opacity: 0.4;
+  }
+  .crew-row:hover .crew-name-in,
+  .crew-row.is-active .crew-name-in {
+    transform: translateX(22px);
+  }
+  .crew-float {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 20;
+    width: clamp(220px, 19vw, 290px);
+    aspect-ratio: 4 / 5;
+    pointer-events: none;
+    background: #111;
+    clip-path: inset(50% 0 50% 0);
+    transition: clip-path 0.6s var(--ease-cine);
+    will-change: transform;
+  }
+  .crew-float.is-on {
+    clip-path: inset(0 0 0 0);
+  }
+  .crew-float img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: inset(100% 0 0 0);
+    transform: scale(1.12);
+    transition:
+      clip-path 0.65s var(--ease-cine),
+      transform 1s var(--ease-cine);
+  }
+  .crew-float img.is-past {
+    clip-path: inset(0 0 100% 0);
+  }
+  .crew-float img.is-cur {
+    z-index: 1;
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+  }
+  .crew-float-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    height: 9%;
+    background: #0a0a0a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 10px;
+    font-family: var(--font-label);
+    font-size: 8.5px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(243, 242, 238, 0.75);
+  }
+  .crew-float-bar.top {
+    top: 0;
+  }
+  .crew-float-bar.bot {
+    bottom: 0;
+  }
+}
+
+/* ============================================================
+   CREW SCENES (/about): one pinned scene per person
+   ============================================================ */
+.scene {
+  position: relative;
+}
+.scene-stage {
+  position: relative;
+}
+.scene-frame {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  max-height: 72svh;
+}
+.scene-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.scene-tc {
+  position: absolute;
+  z-index: 3;
+  font-family: var(--font-label);
+  font-size: 9.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #f3f2ee;
+  background: rgba(10, 10, 10, 0.72);
+  padding: 5px 8px;
+  font-variant-numeric: tabular-nums;
+}
+.scene-body p {
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--muted-strong);
+}
+@media (min-width: 768px) and (min-height: 640px) {
+  .scene {
+    height: 300vh;
+    margin-bottom: -100vh;
+  }
+  .scene.scene-last {
+    height: 200vh;
+    margin-bottom: 0;
+  }
+  .scene-stage {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .scene-frame {
+    width: auto;
+    max-width: 100%;
+    height: calc(100vh - 170px);
+    max-height: none;
+    margin-top: 40px;
   }
 }
 

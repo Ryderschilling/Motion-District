@@ -1,11 +1,13 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { useReducedSafe } from "@/lib/useReducedSafe";
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 /**
- * Shared entrance — everything eases in on the same cinematic curve.
+ * Shared entrance: everything eases in on the same cinematic curve.
+ * Reduced motion is read after mount so server and client HTML match.
  */
 export default function Reveal({
   children,
@@ -18,13 +20,13 @@ export default function Reveal({
   y?: number;
   className?: string;
 }) {
-  const reduced = useReducedMotion();
+  const reduced = useReducedSafe();
   return (
     <motion.div
-      initial={reduced ? false : { opacity: 0, y }}
+      initial={{ opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-12% 0px" }}
-      transition={{ duration: 1, delay, ease: EASE }}
+      transition={reduced ? { duration: 0 } : { duration: 1, delay, ease: EASE }}
       className={className}
     >
       {children}
