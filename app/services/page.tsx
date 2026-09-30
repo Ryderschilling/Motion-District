@@ -5,9 +5,10 @@ import Magnetic from "@/components/Magnetic";
 import Ticker from "@/components/Ticker";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services" },
   title: "Services",
   description:
-    "Production, direction, and edit — one crew, one voice. How Motion District works and what you get.",
+    "Production, direction, and edit. One crew, one voice. How Motion District works and what you get.",
 };
 
 const CAPS = [

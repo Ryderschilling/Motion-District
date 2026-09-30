@@ -27,16 +27,18 @@ const jbmono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  // TODO(ryder): swap for the real domain when it's bought
-  metadataBase: new URL("https://motiondistrict.co"),
+  metadataBase: new URL("https://www.motiondistrict.co"),
+  alternates: { canonical: "/" },
   title: {
-    default: "Motion District — Cinematic Production, Tampa",
-    template: "%s — Motion District",
+    default: "Motion District | Cinematic Production, Tampa",
+    template: "%s | Motion District",
   },
   description:
-    "One-stop shop for cinematic production. Brand films, events, automotive, fitness — shot, directed, and cut in-house. Tampa-based, anywhere-ready.",
+    "One-stop shop for cinematic production. Brand films, events, automotive and fitness, shot, directed, and cut in-house. Tampa-based, anywhere-ready.",
   openGraph: {
-    title: "Motion District — Cinematic Production",
+    title: "Motion District | Cinematic Production",
+    url: "/",
+    siteName: "Motion District",
     description:
       "One-stop shop for cinematic production. Shot, directed, and cut in-house.",
     images: ["/og.jpg"],
@@ -51,6 +53,27 @@ export const metadata: Metadata = {
     apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
   },
   manifest: "/manifest.webmanifest",
+  verification: { google: "E6HsbdIJDZTxTlDAmSeNX9M-MVxM241KoG75xVqHyR8" },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-snippet": -1, "max-image-preview": "large", "max-video-preview": -1 },
+  },
+};
+
+const ORG_LD = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": "https://www.motiondistrict.co/#business",
+  name: "Motion District",
+  url: "https://www.motiondistrict.co/",
+  logo: "https://www.motiondistrict.co/icons/icon-512.png",
+  image: "https://www.motiondistrict.co/og.jpg",
+  email: "addison@motiondistrict.co",
+  description:
+    "Cinematic production company. Brand films, events, automotive and fitness, shot, directed and cut in-house.",
+  areaServed: { "@type": "City", name: "Tampa" },
+  sameAs: ["https://www.instagram.com/motion.districtco/"],
 };
 
 export const viewport: Viewport = {
@@ -65,6 +88,10 @@ export default function RootLayout({
       <body
         className={`${archivo.variable} ${space.variable} ${jbmono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(ORG_LD) }}
+        />
         <CursorField />
         <div className="grain" aria-hidden />
         <Cursor />

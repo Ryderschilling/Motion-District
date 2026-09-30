@@ -6,6 +6,7 @@ import CrewScene from "@/components/CrewScene";
 import { CREW } from "@/lib/crew";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/about" },
   title: "About",
   description:
     "Meet the crew behind Motion District: Smith Rice, founder and director; Addison Moore, co-founder and operations; Gavin Frantz, lead videographer and on-set director.",
