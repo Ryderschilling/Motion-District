@@ -84,6 +84,33 @@ function Hero({ preparedFor, onPlayAll }: { preparedFor: string | null; onPlayAl
   const vidScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
   const titleY = useTransform(scrollYProgress, [0, 1], ["0%", "-30%"]);
   const fade = useTransform(scrollYProgress, [0, 0.7], [1, 0]);
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const fitRef = useRef<HTMLSpanElement>(null);
+
+  // Size "SELECTED" to the exact width of the screen, every screen, every font.
+  useEffect(() => {
+    const h1 = titleRef.current;
+    const word = fitRef.current;
+    if (!h1 || !word) return;
+    const fit = () => {
+      const avail = h1.clientWidth;
+      const fs = parseFloat(getComputedStyle(h1).fontSize);
+      const w = word.getBoundingClientRect().width;
+      if (!avail || !w) return;
+      const byWidth = (fs * avail) / w;
+      const byHeight = (window.innerHeight * 0.56) / (2 * 0.84);
+      h1.style.fontSize = `${Math.floor(Math.min(byWidth, byHeight) * 0.995)}px`;
+    };
+    fit();
+    document.fonts?.ready.then(fit);
+    const ro = new ResizeObserver(fit);
+    ro.observe(h1);
+    window.addEventListener("resize", fit);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", fit);
+    };
+  }, []);
 
   const line = (delay: number) => ({
     initial: { y: reduced ? "0%" : "108%" },
@@ -110,15 +137,15 @@ function Hero({ preparedFor, onPlayAll }: { preparedFor: string | null; onPlayAl
       {/* letterbox shutter */}
       <motion.div
         className="pf-bar pf-bar-top"
-        initial={{ scaleY: reduced ? 1 : 7.2 }}
-        animate={{ scaleY: 1 }}
+        initial={{ scaleY: reduced ? 0 : 1 }}
+        animate={{ scaleY: 0 }}
         transition={{ duration: reduced ? 0 : 1.5, delay: 0.2, ease: EASE }}
         aria-hidden
       />
       <motion.div
         className="pf-bar pf-bar-bot"
-        initial={{ scaleY: reduced ? 1 : 7.2 }}
-        animate={{ scaleY: 1 }}
+        initial={{ scaleY: reduced ? 0 : 1 }}
+        animate={{ scaleY: 0 }}
         transition={{ duration: reduced ? 0 : 1.5, delay: 0.2, ease: EASE }}
         aria-hidden
       />
@@ -141,9 +168,11 @@ function Hero({ preparedFor, onPlayAll }: { preparedFor: string | null; onPlayAl
             <span>Prepared for</span> {preparedFor}
           </motion.p>
         )}
-        <h1 className="font-display pf-hero-title">
+        <h1 ref={titleRef} className="font-display pf-hero-title">
           <span className="pf-mask">
-            <motion.span {...line(0.85)}>Selected</motion.span>
+            <motion.span {...line(0.85)}>
+              <span ref={fitRef} className="pf-fit">Selected</span>
+            </motion.span>
           </span>
           <span className="pf-mask">
             <motion.span {...line(1.0)}>
