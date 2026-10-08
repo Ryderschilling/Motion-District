@@ -24,7 +24,7 @@ export const PORTFOLIO: PortfolioFilm[] = [
   { slug: "tampa", title: "Tampa", cat: "Automotive", dur: "0:13", seconds: 13 },
   { slug: "oh-child", title: "Oh Child", cat: "Music", dur: "2:07", seconds: 127 },
   { slug: "bpn", title: "BPN", cat: "Fitness", dur: "0:24", seconds: 24 },
-  { slug: "night-run-revuelto", title: "Revuelto Night Run", cat: "Automotive", dur: "0:15", seconds: 15 },
+  { slug: "night-run-revuelto", title: "Revuelto Night Run", cat: "Automotive", dur: "0:28", seconds: 28 },
   { slug: "creative-director", title: "Life as a Creative Director", cat: "Lifestyle", dur: "0:10", seconds: 10 },
 ];
 
